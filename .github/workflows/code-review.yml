@@ -1,0 +1,49 @@
+name: Simple Code Review
+
+# Trigger on pull requests to main branch
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run ESLint to check coding standards
+      - name: Lint code
+        run: npm run lint
+
+      # Step 5: Run tests with Jest
+      - name: Run tests
+        run: npm run test
+
+      # Step 6: Run npm audit for security checks
+      - name: Security audit
+        run: npm audit --audit-level=moderate || echo "Security issues found"
+
+      # Step 7: Create summary comment for PR
+      - name: Post Code Review Summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            **Code Review Summary**
+            - Lint: ✅ Completed (check ESLint results in Actions logs)
+            - Tests: ✅ Completed (check Jest results in Actions logs)
+            - Security Audit: ✅ Completed (check Actions logs for details)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

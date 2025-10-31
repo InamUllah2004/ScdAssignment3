@@ -73,8 +73,14 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="heavens-above-documentation">Heavens Above Documentation</h1>
-<p>Welcome to the updated version! 🚀<br />
-This change should trigger an automatic redeployment.</p>
+<p>This project uses several GitHub Actions and automation files to handle deployment, documentation, maintenance, and dependency management efficiently.</p>
+<p>The ci.yml file manages the project’s continuous integration and deployment process. It automatically builds and deploys the application to Vercel whenever changes are pushed to the main branch, ensuring that the live site always reflects the latest stable version of the project.</p>
+<p>The code-review.yml workflow focuses on the documentation pipeline. It uses MkDocs with the Material theme to build project documentation and automatically deploys it to GitHub Pages. This keeps your documentation always up to date with every update or code review.</p>
+<p>The release-notes.yml file is responsible for generating release notes. Whenever a new version tag (for example, v1.0.0) is created, this workflow gathers the latest commit messages and automatically compiles them into a RELEASE_NOTES.md file. This helps maintain a clear changelog for version tracking.</p>
+<p>The scheduled-tasks.yml workflow handles daily scheduled maintenance. It runs every evening at 7:30 PM Pakistan Time (14:30 UTC), executing a Node.js script for data scraping or housekeeping, compressing backup files, and uploading them as build artifacts for secure storage.</p>
+<p>The dependabot.yml configuration file automates dependency management. It enables Dependabot to check for updates in both NPM packages and GitHub Actions workflows daily. When new updates are found, it automatically creates pull requests to keep your project dependencies up to date.</p>
+<p>Additionally, the uploaded ci.yml file serves as a comprehensive continuous integration pipeline, ensuring that all code changes are built, tested, and deployed consistently. It helps maintain the overall reliability and stability of your production environment.</p>
+<p>Lastly, the uploaded code-review.yml file supports automated documentation and code review processes. It ensures that any updates to your project trigger the appropriate build and review workflows, maintaining documentation accuracy and workflow consistency across versions.</p>
               
             </div>
           </div><footer>
@@ -122,5 +128,5 @@ This change should trigger an automatic redeployment.</p>
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-10-31 17:18:19.373994+00:00
+Build Date UTC : 2025-10-31 17:29:11.764157+00:00
 -->

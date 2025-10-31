@@ -1,0 +1,62 @@
+name: Documentation Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # allow manual trigger
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python (for MkDocs)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      # Step 3: Install MkDocs and dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material
+
+      # Step 4: Build documentation
+      - name: Build documentation
+        run: mkdocs build
+
+      # Step 5: Get version from Git tag (or fallback to short SHA)
+      - name: Determine version
+        id: version
+        run: |
+          if git describe --tags --exact-match >/dev/null 2>&1; then
+            echo "version=$(git describe --tags)" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 6: Deploy default docs to gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          destination_dir: /   # default docs
+
+      # Step 7: Deploy versioned docs
+      - name: Deploy versioned docs
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          destination_dir: versions/${{ steps.version.outputs.version }}  # versioned folder
+
+      # Step 8: Confirmation
+      - name: Deployment complete
+        run: |
+          echo "Docs deployed! Version: ${{ steps.version.outputs.version }}"

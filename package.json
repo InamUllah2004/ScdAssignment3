@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node run.js",
     "build": "node run.js",
-    "lint": "eslint . --ext .js,.mjs,.cjs || true",
+    "lint": "eslint . --ext .js,.mjs,.cjs",
     "lint:fix": "eslint . --ext .js,.mjs,.cjs --fix",
     "test": "jest"
   },
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/PKUPI/heavens-above#readme",
   "engines": {
-    "node": ">=12.10.0"
+    "node": "20.x"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",

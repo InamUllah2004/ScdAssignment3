@@ -6,9 +6,9 @@
   "main": "run.js",
   "scripts": {
     "start": "node run.js",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-     "test": "jest"
+    "lint": "eslint . --ext .js,.mjs,.cjs",
+    "lint:fix": "eslint . --ext .js,.mjs,.cjs --fix",
+    "test": "jest"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",

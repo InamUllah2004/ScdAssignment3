@@ -20,4 +20,10 @@ describe('Basic CI pipeline tests', () => {
   test('iridium exports getTable function', () => {
     expect(typeof iridium.getTable).toBe('function');
   });
+  // Add this in a test file like run.test.js
+test('Failing test example', () => {
+  expect(1 + 1).toBe(3); // intentional fail
 });
+
+});
+W

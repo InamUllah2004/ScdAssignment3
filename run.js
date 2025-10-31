@@ -18,3 +18,4 @@ iridium.getTable({
 	root: "./public/data/"
 });
 */
+console.log("Hello World")   // missing semicolon, ESLint should complain

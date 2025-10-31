@@ -1,3 +1,4 @@
+# Dependabot configuration
 version: 2
 updates:
   # 1️⃣ Update NPM dependencies daily

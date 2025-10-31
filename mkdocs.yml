@@ -1,0 +1,21 @@
+site_name: Scd Assignment 3 Documentation
+site_description: Documentation for the Heavens Above (SCD Assignment 3) project
+site_author: Muhammad Inam Ullah
+repo_url: https://github.com/InamUllah2004/ScdAssignment3
+repo_name: ScdAssignment3
+
+# Folder where documentation files are stored
+docs_dir: docs
+
+# Theme for the site (simple and clean)
+theme:
+  name: readthedocs
+
+# Navigation structure
+nav:
+  - Home: index.md
+
+# Extra project info and versioning
+extra:
+  version: 1.0.0
+  author: Muhammad Inam Ullah

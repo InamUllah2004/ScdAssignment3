@@ -4,15 +4,21 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write  # required for gh-pages deployment
 
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
+
     steps:
       # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ensures tags are available for version step
 
       # Step 2: Set up Python (for MkDocs)
       - name: Set up Python
@@ -26,11 +32,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install mkdocs mkdocs-material
 
+      # ✅ Optional: create minimal docs if missing
+      - name: Ensure docs and mkdocs.yml exist
+        run: |
+          if [ ! -d "docs" ]; then
+            mkdir docs
+            echo "# Heavens Above Documentation" > docs/index.md
+          fi
+          if [ ! -f "mkdocs.yml" ]; then
+            echo "site_name: Heavens Above" > mkdocs.yml
+            echo "theme:\n  name: material" >> mkdocs.yml
+            echo "nav:\n  - Home: index.md" >> mkdocs.yml
+          fi
+
       # Step 4: Build documentation
       - name: Build documentation
-        run: mkdocs build
+        run: mkdocs build --clean
 
-      # Step 5: Get version from Git tag (or fallback to short SHA)
+      # Step 5: Get version (tag or SHA)
       - name: Determine version
         id: version
         run: |
@@ -40,13 +59,12 @@ jobs:
             echo "version=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           fi
 
-      # Step 6: Deploy default docs to gh-pages
-      - name: Deploy to GitHub Pages
+      # Step 6: Deploy main docs to root
+      - name: Deploy to GitHub Pages (main)
         uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
-          destination_dir: /   # default docs
 
       # Step 7: Deploy versioned docs
       - name: Deploy versioned docs
@@ -54,9 +72,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
-          destination_dir: versions/${{ steps.version.outputs.version }}  # versioned folder
+          destination_dir: versions/${{ steps.version.outputs.version }}
+          keep_files: true  # keeps existing root docs
 
       # Step 8: Confirmation
       - name: Deployment complete
         run: |
-          echo "Docs deployed! Version: ${{ steps.version.outputs.version }}"
+          echo "✅ Docs deployed! Version: ${{ steps.version.outputs.version }}"

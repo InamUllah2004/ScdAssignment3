@@ -1,4 +1,6 @@
 # Dependabot configuration
+# This is a test commit to trigger Dependabot
+
 version: 2
 updates:
   # 1️⃣ Update NPM dependencies daily

@@ -1,0 +1,45 @@
+name: Scheduled Tasks
+
+# Trigger workflow on schedule (7:30 PM PKT daily) and manually
+on:
+  schedule:
+    - cron: '30 14 * * *'  # 14:30 UTC = 7:30 PM PKT
+  workflow_dispatch:
+
+jobs:
+  scheduled-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run your maintenance/data backup script
+      - name: Run maintenance tasks
+        run: |
+          echo "Running scheduled tasks..."
+          node run.js  # your scraper or maintenance script
+          mkdir -p backups
+          zip -r backups/backup-${{ github.run_id }}.zip public/data || echo "No data folder found"
+
+      # Step 5: Upload backup as artifact for storage
+      - name: Upload backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-${{ github.run_id }}
+          path: backups/backup-${{ github.run_id }}.zip
+
+      # Step 6: Log completion
+      - name: Completion message
+        run: echo "Scheduled tasks completed successfully at $(date)"

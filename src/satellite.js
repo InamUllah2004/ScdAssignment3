@@ -2,6 +2,8 @@ const request = require("request");
 const cheerio = require("cheerio");
 const fs = require("fs");
 const utils = require("./utils");
+let options;
+let current;
 
 const property = ["url", "date", "brightness", "events", "passType", "image", "scoreData", "exist", "score", "id"];
 const events = ["rise", "reachAltitude10deg", "highestPoint", "dropBelowAltitude10deg", "set", "exitShadow", "enterShadow"];
@@ -105,7 +107,7 @@ function getTable(config) {
                     temp[property[8]] = 0;
                     const id = utils.md5(Math.random().toString()); //temp[property[1]] + temp[property[7]];
                     temp[property[9]] = id;
-                    fs.appendFile(basedir + id + ".html", table.html(), (err) => {
+                    fs.writeFileSync(basedir + id + ".html", table.html(), (err) => {
 						if (err) console.log(err);
 					}); //保存表格
                     request.get(utils.image_options(temp[property[5]])).pipe(fs.createWriteStream(basedir + id + ".png", {
@@ -143,7 +145,7 @@ function getTable(config) {
 						return ele;
 					});
 				}
-				database = database.map((ele, index) => {
+				database = database.map((ele) => {
 					if (isNaN(ele[property[6]][1])) {
 						ele[property[8]] = 0;
 						return ele;
@@ -163,7 +165,7 @@ function getTable(config) {
 				database.sort((a, b) => {
 					return a[property[8]] <= b[property[8]] ? 1 : -1; //分数
 				});
-				fs.appendFile(basedir + "index.json", JSON.stringify(database), (err) => {
+				fs.writeFileSync(basedir + "index.json", JSON.stringify(database), (err) => {
 					if (err) console.log(err);
 				});
 			}

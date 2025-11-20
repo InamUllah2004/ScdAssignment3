@@ -1,4 +1,4 @@
-/* eslint-env jest */
+
 const utils = require('./src/utils');
 const satellite = require('./src/satellite');
 const iridium = require('./src/iridium');
@@ -21,3 +21,4 @@ describe('Basic CI pipeline tests', () => {
     expect(typeof iridium.getTable).toBe('function');
   });
 });
+///////////////////////////////hello its me inam//////////////////
